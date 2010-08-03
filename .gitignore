@@ -1,0 +1,5 @@
+tmp/**
+pkg/**
+nbproject/**
+.bundle/**
+*.gem

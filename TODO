@@ -1,0 +1,6 @@
+* Actually make things work.
+* Consider some kind of JSON "schema" for validating request data before it
+  hits the handler.
+* Run handlers within a Fiber for more natural processing.
+* When a client first calls in without a session ID, one should be assigned via
+  cookie and used as identification for later queries and result retrieval.
