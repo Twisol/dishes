@@ -28,34 +28,39 @@ module Dishes
     end
 
     def call (env)
-      @env = env
-
-      return response(405) unless ['POST', 'GET'].include? @env['REQUEST_METHOD']
-      return response(415) unless @env['HTTP_CONTENT_TYPE'] == 'application/json'
+      return response(405) unless ['POST', 'GET'].include? env['REQUEST_METHOD']
+      return response(415) unless env['HTTP_CONTENT_TYPE'] == 'application/json'
 
       begin
-        @data = JSON.parse(@env['rack.input'].read)
+        data = JSON.parse(env['rack.input'].read)
       rescue JSON::ParserError
         return response(400)
       end
 
       # TODO: get session ID here
 
-      case @env['REQUEST_METHOD']
+      case env['REQUEST_METHOD']
       when 'POST'
-        receive_query
+        receive_query(data)
       when 'GET'
-        send_response
+        send_response(data)
       end
     end
 
-    def receive_query
+    def receive_query(query)
       # TODO: Add this
       # TODO: Give the user a session ID if they don't have one already.
-      response(200)
+      job = query['job'].to_sym rescue nil
+      return response(400) if job.nil?
+
+      @menus.each do |menu|
+        return response(200) if menu.invoke(job)
+      end
+
+      response(500)
     end
 
-    def send_response
+    def send_response(query)
       # TODO: Add this
       # TODO: Return immediately if there are no outstanding jobs for this user.
       response(200)

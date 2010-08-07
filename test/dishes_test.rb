@@ -3,7 +3,15 @@ require 'eventmachine'
 require 'test/unit'
 require 'rack/mock'
 
+class EchoMenu < Dishes::Menu
+  def echo
+    EM.stop
+    "foo"
+  end
+end
+
 Testaurant = Dishes::Restaurant.new do
+  menu EchoMenu
 end
 
 class RestaurantTest < Test::Unit::TestCase
@@ -11,7 +19,7 @@ class RestaurantTest < Test::Unit::TestCase
     @request = Rack::MockRequest.new Testaurant
     @headers = {
       'HTTP_CONTENT_TYPE' => 'application/json',
-      :input => '{"foo": 42}',
+      :input => '{"job": "echo"}',
     }
   end
 
@@ -43,8 +51,10 @@ class RestaurantTest < Test::Unit::TestCase
   ###
 
   def test_query
-    response = @request.post '/', @headers
-    assert_equal 200, response.status
+    EM.run do
+      response = @request.post '/', @headers
+      assert_equal 200, response.status
+    end
   end
 
   def test_result

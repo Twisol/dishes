@@ -7,4 +7,5 @@ module Dishes
 
   autoload :Restaurant, 'dishes/restaurant'
   autoload :RestaurantBuilder, 'dishes/restaurant_builder'
+  autoload :Menu, 'dishes/menu'
 end
