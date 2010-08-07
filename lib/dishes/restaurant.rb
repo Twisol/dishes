@@ -7,6 +7,16 @@ module Dishes
   class Restaurant
     ASYNC_RESPONSE = [-1, {}, []] # :nodoc:
 
+    class << self
+      def build (&blk)
+        restaurant = new(&blk)
+        Rack::Builder.new do
+          use Rack::Cookies
+          run restaurant
+        end.to_app
+      end
+    end
+
     # Builds a menu.
     def initialize (&blk)
       @menus = Dishes::RestaurantBuilder.build(&blk)
