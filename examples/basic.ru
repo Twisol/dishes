@@ -6,6 +6,12 @@ Bundler.setup
 
 require 'dishes'
 
+class EchoMenu < Dishes::Menu
+  def echo
+    @data
+  end
+end
+
 class MathMenu < Dishes::Menu
   before :set_operands
 
@@ -33,5 +39,6 @@ class MathMenu < Dishes::Menu
 end
 
 run Dishes::Restaurant.build {
+  menu EchoMenu
   menu MathMenu
 }
