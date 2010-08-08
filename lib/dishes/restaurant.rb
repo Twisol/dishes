@@ -51,7 +51,7 @@ module Dishes
     def receive_query(query)
       # TODO: Add this
       # TODO: Give the user a session ID if they don't have one already.
-      job = query['query'].to_sym rescue nil
+      job = query['action'].to_sym rescue nil
       return response(400) if job.nil?
 
       @menus.each do |menu|

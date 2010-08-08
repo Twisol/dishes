@@ -50,7 +50,7 @@ class RestaurantTest < Test::Unit::TestCase
 
   def test_query
     EM.run do
-      response = post '/', '{"query": "echo"}'
+      response = post '/', '{"action": "echo"}'
       assert_equal 200, response.status
     end
   end
