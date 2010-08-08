@@ -35,6 +35,5 @@ end
 use Rack::CommonLogger
 
 run Dishes::Restaurant.build {
-  menu EchoMenu
   menu MathMenu
 }
