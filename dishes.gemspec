@@ -17,9 +17,9 @@ Gem::Specification.new do |s|
   s.description = summary
   s.homepage = 'http://github.com/Twisol/dishes'
 
-  s.authors = ['Jonathan Castello']
+  s.author = 'Jonathan Castello'
   s.email = 'twisolar@gmail.com'
 
-  s.files = Dir['lib/**/*']
+  s.files = [Dir['lib/**/*'], 'LICENSE'].flatten
   s.add_bundler_dependencies
 end
