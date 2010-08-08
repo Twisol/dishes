@@ -11,15 +11,16 @@ summary = 'An asynchronous job-based layer'
 Gem::Specification.new do |s|
   s.name = 'dishes'
   s.version = ::Dishes::VERSION
-  s.date = Date.today.to_s
+  s.homepage = 'http://github.com/Twisol/dishes'
 
   s.summary = summary
   s.description = summary
-  s.homepage = 'http://github.com/Twisol/dishes'
 
   s.author = 'Jonathan Castello'
   s.email = 'twisolar@gmail.com'
 
   s.files = [Dir['lib/**/*'], 'LICENSE'].flatten
   s.add_bundler_dependencies
+
+  s.rubyforge_project = 'nowarning' # to stop that annoying warning
 end
