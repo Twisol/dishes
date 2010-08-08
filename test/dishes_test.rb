@@ -4,9 +4,21 @@ require 'test/unit'
 require 'rack/test'
 
 class EchoMenu < Dishes::Menu
+  before :my_before
+  after :my_after
+
   def echo
     EM.stop
     print '^'
+  end
+
+  private
+  def my_before
+    print '('
+  end
+
+  def my_after
+    print ')'
   end
 end
 

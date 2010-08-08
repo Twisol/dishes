@@ -55,7 +55,7 @@ module Dishes
       return response(400) if job.nil?
 
       @menus.each do |menu|
-        return response(200) if menu.invoke(job)
+        return response(200) if menu.process(job, query['data'])
       end
 
       response(500)
