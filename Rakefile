@@ -1,10 +1,9 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require 'dishes'
+require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'rdoc/task'
-require 'rake/gempackagetask'
 
 Rake::TestTask.new do |t|
   t.libs << 'test'

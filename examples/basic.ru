@@ -1,16 +1,10 @@
-# This is a GOAL EXAMPLE. It probably doesn't work, full stop. This code gives
+# This is a GOAL EXAMPLE. It probably doesn't work fully. This code gives
 # you an idea of the current target syntax and feature set.
 
-require 'bundler'
-Bundler.setup
+lib = File.expand_path('../../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
 
 require 'dishes'
-
-class EchoMenu < Dishes::Menu
-  def echo
-    @data
-  end
-end
 
 class MathMenu < Dishes::Menu
   before :set_operands
@@ -37,6 +31,8 @@ class MathMenu < Dishes::Menu
     @left, @right = @data[:left], @data[:right]
   end
 end
+
+use Rack::CommonLogger
 
 run Dishes::Restaurant.build {
   menu EchoMenu

@@ -12,6 +12,7 @@ module Dishes
         restaurant = new(&blk)
         Rack::Builder.new do
           use Rack::Cookies
+          use Rack::ContentType, "application/json"
           run restaurant
         end.to_app
       end
@@ -29,20 +30,20 @@ module Dishes
 
     def call (env)
       return response(405) unless ['POST', 'GET'].include? env['REQUEST_METHOD']
-      return response(415) unless env['HTTP_CONTENT_TYPE'] == 'application/json'
-
-      begin
-        data = JSON.parse(env['rack.input'].read)
-      rescue JSON::ParserError
-        return response(400)
-      end
+      return response(415) unless env['CONTENT_TYPE'] == 'application/json'
 
       # TODO: get session ID here
 
       case env['REQUEST_METHOD']
       when 'POST'
+        begin
+          data = JSON.parse(env['rack.input'].read)
+        rescue JSON::ParserError
+          return response(400)
+        end
         receive_query(data)
       when 'GET'
+        data = Rack::Utils.parse_query(env['QUERY_STRING'])
         send_response(data)
       end
     end
@@ -50,7 +51,7 @@ module Dishes
     def receive_query(query)
       # TODO: Add this
       # TODO: Give the user a session ID if they don't have one already.
-      job = query['job'].to_sym rescue nil
+      job = query['query'].to_sym rescue nil
       return response(400) if job.nil?
 
       @menus.each do |menu|

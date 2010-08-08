@@ -4,7 +4,7 @@ require 'fiber'
 module Dishes
   class Menu
     class << self
-      def before
+      def before (method)
       end
 
       def after
@@ -13,7 +13,7 @@ module Dishes
       def invoke (job)
         can_do = public_instance_methods(false).include? job
         EM.next_tick do
-          Fiber.new {puts new.__send__ job}.resume
+          Fiber.new {new.__send__ job}.resume
         end if can_do
         can_do
       end
