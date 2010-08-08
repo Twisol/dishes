@@ -28,7 +28,7 @@ class MathMenu < Dishes::Menu
 
   private
   def set_operands
-    @left, @right = @data[:left], @data[:right]
+    @left, @right = @params[:left], @params[:right]
   end
 end
 

@@ -18,8 +18,5 @@ module Dishes
         can_do
       end
     end
-
-    def initialize
-    end
   end
 end
