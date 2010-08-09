@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.homepage = 'http://github.com/Twisol/dishes'
 
   s.summary = summary
-  s.description = summary
+  s.description = 'A framework built to handle frequent updates and long-running queries.'
 
   s.author = 'Jonathan Castello'
   s.email = 'twisolar@gmail.com'
