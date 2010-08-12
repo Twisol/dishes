@@ -19,24 +19,23 @@ module Dishes
       end
 
     private
-      def new # :nodoc:
+      def new (*args, &blk)
         super
       end
     end
 
     def initialize (&blk) # :nodoc:
-      @menus = Dishes::RestaurantBuilder.build(&blk)
+      @chefs = Dishes::RestaurantBuilder.build(&blk)
+#      @sessions = {} # TODO: Make @sessions thread-safe.
     end
 
     def call (env) # :nodoc:
-      return response(405) unless ['POST', 'GET'].include? env['REQUEST_METHOD']
       return response(415) unless env['CONTENT_TYPE'] == 'application/json'
 
       case env['REQUEST_METHOD']
-      when 'POST'
-        receive_query(env)
-      when 'GET'
-        send_response(env)
+        when 'POST' then post_query(env)
+        when 'GET'  then get_results(env)
+        else             response(405)
       end
     end
 
@@ -45,7 +44,7 @@ module Dishes
       [status, {'Content-Type' => 'text/plain'}, [content].flatten]
     end
 
-    def receive_query(env)
+    def post_query(env)
       begin
         query = JSON.parse(env['rack.input'].read)
       rescue JSON::ParserError
@@ -55,14 +54,15 @@ module Dishes
       action = query['action'].to_sym rescue nil
       return response(400) if action.nil?
 
-      session = query['session']
-      return response(400) if session.nil?
+#      session = @sessions[query['session']] unless query['session'].nil?
+#      return response(400) if session.nil?
 
-      @menus.each do |menu|
-        if menu.has_action? (action)
-          EM.next_tick do
-            menu.invoke(action, query['data'])
-          end
+      # TODO: order = session.new_order
+      order = Order.new(action)
+
+      @chefs.each do |chef|
+        if chef.can_cook?(action)
+          EM.next_tick {chef.cook(order, query['data'])}
           return response(200)
         end
       end
@@ -70,11 +70,21 @@ module Dishes
       response(500)
     end
 
-    def send_response(env)
+    def get_results(env)
       # TODO: Give the user a session ID if they don't have one already.
-      # TODO: Return immediately if there are no outstanding jobs for this user.
       data = Rack::Utils.parse_query(env['QUERY_STRING'])
-      response(200)
+
+      # TODO: Create a new session if there's no provided tag
+      return response(200, "sessiontag") if data['session'].nil?
+
+#      session = @sessions[data['sesion']]
+#      return response(400) if session.nil?
+
+      # TODO: Return immediately if there are no unfinished queries.
+      #       Otherwise, wait for them to finish.
+
+      # TODO: Provide a -real- task ID
+      response(200, JSON.generate(:id => 42))
     end
   end
 end

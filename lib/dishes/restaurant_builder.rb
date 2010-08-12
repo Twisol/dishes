@@ -6,16 +6,16 @@ module Dishes
       def build (&blk)
         builder = new
         builder.instance_eval(&blk)
-        builder.instance_variable_get :@menus
+        builder.instance_variable_get :@chefs
       end
     end
 
     def initialize
-      @menus = []
+      @chefs = []
     end
 
-    def menu (item)
-      @menus << item unless @menus.include? item
+    def chef (item)
+      @chefs << item unless @chefs.include? item
     end
   end
 end

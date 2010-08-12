@@ -2,8 +2,9 @@ require 'dishes'
 require 'test/unit'
 require 'rack/test'
 
-class EchoMenu < Dishes::Menu
-  def test
+class EchoChef < Dishes::Chef
+  def echo
+    @params['message']
   end
 end
 
@@ -16,7 +17,7 @@ class RestaurantTest < Test::Unit::TestCase
 
   def app
     Dishes::Restaurant.build do
-      menu EchoMenu
+      chef EchoChef
     end
   end
 
@@ -52,7 +53,7 @@ class RestaurantTest < Test::Unit::TestCase
   ###
 
   def test_query
-    post '/', '{"action": "test", "session": "x"}'
+    post '/', '{"action": "echo", "session": "x"}'
     assert_equal 200, last_response.status
   end
 

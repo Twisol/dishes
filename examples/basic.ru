@@ -6,7 +6,7 @@ $:.unshift lib unless $:.include?(lib)
 
 require 'dishes'
 
-class MathMenu < Dishes::Menu
+class ArithmeticChef < Dishes::Chef
   before :set_operands
 
   def add
@@ -22,11 +22,11 @@ class MathMenu < Dishes::Menu
   end
 
   def divide
-    error if @right == 0
+    raise 'Attempt to divide by zero' if @right == 0
     @left / @right
   end
-
-  private
+  
+private
   def set_operands
     @left, @right = @params[:left], @params[:right]
   end
@@ -35,5 +35,5 @@ end
 use Rack::CommonLogger
 
 run Dishes::Restaurant.build {
-  menu MathMenu
+  chef ArithmeticChef
 }
