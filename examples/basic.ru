@@ -7,7 +7,7 @@ $:.unshift lib unless $:.include?(lib)
 require 'dishes'
 
 class ArithmeticChef < Dishes::Chef
-  before :set_operands
+  before :auth, :set_operands
 
   def add
     @left + @right
@@ -27,13 +27,24 @@ class ArithmeticChef < Dishes::Chef
   end
   
 private
+  def auth
+    # Use Warden to ensure the user is a qualified mathematician.
+  end
+
   def set_operands
     @left, @right = @params[:left], @params[:right]
   end
 end
 
-use Rack::CommonLogger
+class MathRestaurant < Dishes::Restaurant
+  # Declare the chefs to be used by this restaurant here.
+  chef ArithmeticChef do
+    # Place additional middlewares here.
+  end
 
-run Dishes::Restaurant.build {
-  chef ArithmeticChef
-}
+  # Extra configuration can go here too.
+end
+
+
+use Rack::CommonLogger
+run MathRestaurant.new
