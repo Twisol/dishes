@@ -13,15 +13,15 @@ class ArithmeticChef < Dishes::Chef
     @left + @right
   end
 
-  def subtract
+  def sub
     @left - @right
   end
 
-  def multiply
+  def mul
     @left * @right
   end
 
-  def divide
+  def div
     raise 'Attempt to divide by zero' if @right == 0
     @left / @right
   end
@@ -36,15 +36,9 @@ private
   end
 end
 
-class MathRestaurant < Dishes::Restaurant
-  # Declare the chefs to be used by this restaurant here.
-  chef ArithmeticChef do
-    # Place additional middlewares here.
-  end
-
-  # Extra configuration can go here too.
-end
-
-
 use Rack::CommonLogger
-run MathRestaurant.new
+run Dishes::Service.new do
+  namespace :math do
+    route [:add, :sub, :div, :mul] => ArithmeticChef
+  end
+end
