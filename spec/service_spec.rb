@@ -2,7 +2,7 @@ require 'dishes'
 
 EchoService = Dishes::Service.new do
   namespace :math do
-    route [:add, :sub, :div, :mul] => Class.new(Dishes::Chef)
+    route [:add, :sub, :div, :mul] => Class.new(Dishes::Actor)
   end
 end
 

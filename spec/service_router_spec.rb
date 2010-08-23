@@ -6,24 +6,33 @@ describe Dishes::ServiceRouter do
   end
 
   it 'should start with no defined routes' do
-    @sr.routes.length.should be 0
+    @sr.routes.size.should be 0
   end
 
-  it 'should match an action with a chef' do
-    @sr.route :foo => Class.new(Dishes::Chef)
+  it 'should map an action with an actor' do
+    chef = Class.new(Dishes::Actor)
+    @sr.route :foo => chef
+
     @sr.routes.should include 'foo'
+    @sr.routes['foo'].should == chef
   end
 
-  it 'should match multiple actions with a chef' do
-    @sr.route [:foo, :bar] => Class.new(Dishes::Chef)
+  it 'should map multiple actions at once' do
+    chef = Class.new(Dishes::Actor)
+    @sr.route [:foo, :bar] => chef
+
     @sr.routes.should include *['foo', 'bar']
+    @sr.routes['foo'].should == chef
+    @sr.routes['bar'].should == chef
   end
 
-  it 'should let actions be namespaced' do
-    @sr.namespace :foo do
-      route :bar => Class.new(Dishes::Chef)
-      route [:aaa, :bbb] => Class.new(Dishes::Chef)
+  it 'should namespace actions from another router' do
+    sr2 = Dishes::ServiceRouter.new do
+      route :bar => Class.new(Dishes::Actor)
+      route [:aaa, :bbb] => Class.new(Dishes::Actor)
     end
+    @sr.namespace :foo, sr2
+    
     @sr.routes.should include 'foo:bar'
     @sr.routes.should include *['foo:aaa', 'foo:bbb']
   end

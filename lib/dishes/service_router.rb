@@ -9,11 +9,14 @@ module Dishes
       instance_eval(&blk) if block_given?
     end
 
-    def namespace (tag, &blk)
+    def namespace (tag, ns=nil, &blk)
+      unless ns
+        ns = self.class.new
+        ns.instance_eval(&blk)
+      end
+
       tag = tag.to_s
-      router = self.class.new
-      router.instance_eval(&blk)
-      router.routes.each do |key, value|
+      ns.routes.each do |key, value|
         key = tag + ':' + key
         @routes[key] = value unless @routes[key]
       end
@@ -21,8 +24,8 @@ module Dishes
 
     def route (item)
       worker = item.first[1]
-      unless worker.ancestors[1..-1].include?(Dishes::Chef)
-        raise "Handler must be a descendant of Dishes::Chef"
+      unless worker.ancestors[1..-1].include?(Dishes::Actor)
+        raise "Handler must be a descendant of Dishes::Actor"
       end
 
       actions = [item.first[0]].flatten.map {|a| a.to_s}

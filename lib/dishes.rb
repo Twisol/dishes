@@ -7,6 +7,5 @@ module Dishes
 
   autoload :Service, 'dishes/service'
   autoload :ServiceRouter, 'dishes/service_router'
-  autoload :Chef, 'dishes/chef'
-  autoload :Order, 'dishes/order'
+  autoload :Actor, 'dishes/actor'
 end
